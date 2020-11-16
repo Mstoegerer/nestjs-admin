@@ -1,11 +1,14 @@
-import { Connection, EntityMetadata, SelectQueryBuilder, Brackets } from '../utils/typeormProxy'
-import { EntityType } from '../types'
+import { EntityType, MaybePromise } from '../types'
 import { getDefaultWidget } from './widgets/utils'
 import DefaultAdminSite from './adminSite'
 import ManyToManyWidget from './widgets/manyToManyWidget'
 import { InvalidDisplayFieldsException } from './exceptions/invalidDisplayFields.exception'
 import { WidgetConstructor } from './widgets/widget.interface'
 
+import { Request, Response } from 'express'
+
+export type ListActionHandler = (request: Request, response: Response) => MaybePromise<void>
+export type ListAction = { label: string; action: ListActionHandler }
 abstract class AdminEntity {
   abstract entity: EntityType
 
@@ -13,6 +16,11 @@ abstract class AdminEntity {
    * Fields of the entity that will be displayed on the list page
    */
   listDisplay: string[] | null = null
+
+  /**
+   * List of the actions possible on the list page
+   */
+  listActions: ListAction[]
 
   /**
    * Fields of the entity that will be searchable on the list page
