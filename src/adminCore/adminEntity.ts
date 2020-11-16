@@ -29,13 +29,10 @@ abstract class AdminEntity {
   resultsPerPage: number = 25
   widgets: { [propertyName: string]: WidgetConstructor } = {}
 
-  constructor(
-    private readonly adminSite: DefaultAdminSite,
-    private readonly connection: Connection,
-  ) {}
+  constructor(private readonly adminSite: DefaultAdminSite) {}
 
   get repository() {
-    return this.connection.getRepository(this.entity)
+    return this.adminSite.connection.getRepository(this.entity)
   }
 
   get metadata() {
